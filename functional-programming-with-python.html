@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Functional Programming in Python</title>
+		<meta charset="utf-8">
+		<style>
+@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+@import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+body {
+	font-family: 'Droid Serif';
+}
+			p {
+				font-size: 36px;
+			}
+			h1, h2, h3 {
+				font-family: 'Yanone Kaffeesatz';
+				font-weight: 400;
+				margin-bottom: 0;
+			}
+			.remark-slide-content h1 { font-size: 3em; }
+			.remark-slide-content h2 { font-size: 2em; }
+			.remark-slide-content h3 { font-size: 1.6em; }
+			.footnote {
+				position: absolute;
+				bottom: 3em;
+			}
+			li p { line-height: 1.25em;
+				font-size: 36px;
+			}
+			.red { color: #fa0000; }
+			.large { font-size: 2em; }
+			a, a > code {
+				color: rgb(249, 38, 114);
+				text-decoration: none;
+			}
+			code {
+				background: #e7e8e2;
+				border-radius: 5px;
+				color: black;
+			}
+			.remark-code, .remark-inline-code {
+				font-family: 'Ubuntu Mono';
+				background: #e7e8e2;
+
+			}
+			.remark-code-line-highlighted {
+				background-color: #373832;
+				background: #e7e8e2;
+			}
+			.pull-left {
+				float: left;
+				width: 47%;
+			}
+			.pull-right {
+				float: right;
+				width: 47%;
+			}
+			.pull-right ~ p {
+				clear: both;
+			}
+			#slideshow .slide .content code {
+				font-size: 0.8em;
+			}
+			#slideshow .slide .content pre code {
+				font-size: 0.9em;
+				padding: 15px;
+			}
+
+			ul li {
+				font-size: 36px;
+				padding: 5px 0px; }
+
+		.remark-code, .remark-inline-code {
+			font-family: 'Ubuntu Mono';
+			background: #e7e8e2;
+		}
+		.img-left {
+		  width: 50%;
+			float: left;
+		}
+		.img-right {
+			width: 50%;
+			float: right;
+		}
+		/* Two-column layout */
+		.left-column {
+			color: #777;
+			width: 20%;
+			height: 92%;
+			float: left;
+		}
+		.left-column h2:last-of-type, .left-column h3:last-child {
+			color: yellow;
+		}
+		.yellow{
+			color: yellow;
+		}
+
+		img[alt$="-resize-50"]{
+			margin-top: 10px;
+			width:  90%;
+		}
+
+		img[alt$="-resize-b"]{
+			width:  100%;
+		}
+
+		.span {
+		width: 100%;
+		}
+		/*trbl*/
+		img[alt$="-clip-b"]{
+		 margin-top: 10px;
+		 position: absolute;
+     clip: rect(0px auto 225px auto);
+		}
+		 .right-column {
+			width: 75%;
+			float: right;
+			padding-top: 1em;
+		}
+
+		.right-column .{
+			background: #e7e8e2;
+		}
+		.lblue {
+			background: #A9BFD4;
+		}
+		.term {
+			/*color: #6CF02B;*/
+      color: #61DD24;
+			/*background: #4D4D4D;*/
+      background: #383B3E;
+		}
+
+		.actions li {
+			font-size: 32px;
+		}
+		</style>
+	</head>
+	<body>
+		<textarea id="source">
+class: center, middle, term
+
+# Functional Programming in Python
+### 17.05.2016, Oz Tiram, Python Users Munich
+
+
+???
+
+Oz Tiram, currently working as DevOps and Data Engineer.
+Extensive experience with Python and Linux, especially in the
+field of High Perfomance Computing.
+---
+class: term
+#  What is functional programming?
+ * A programming paradigm
+ * In a way, opposite of object-oriented programming
+ * Has lot's of nerdy terms like: immutable data, first class functions,
+   currying, high order function.
+	 - they all make you feel either really smart or really stupid.
+ * `No Side Effects`
+
+???
+
+When people talk about functional programming, they mention a 
+dizzying number of “functional” characteristics. They mention immutable data, 
+first class functions and tail call optimisation. 
+These are language features that aid functional programming. 
+They mention mapping, reducing, pipelining, recursing, currying and the use of 
+higher order functions. 
+These are programming techniques used to write functional code. 
+They mention parallelization, lazy evaluation and determinism. 
+These are advantageous properties of functional programs.
+
+Ignore all that. Functional code is characterised by one thing: 
+the absence of side effects. 
+It doesn’t rely on data outside the current function, 
+and it doesn’t change data that exists outside the current function. 
+Every other “functional” thing can be derived from this property.
+
+citation from:
+https://codewords.recurse.com/issues/one/an-introduction-to-functional-programming
+---
+class: term
+# Why should you care? Why do I care?
+
+## OOP vs. FP
+.img-left[
+![-clip-b](./OOP.jpg)
+]
+.img-right[
+
+![-resize-50](./fp2.jpg)
+]
+
+???
+
+Object Oriented Code can be very complex to master, and as such very hard to 
+maintain. Functional Programming forces us to avoid side effects and as a result
+allows us to gain control over program development, and eases maintenance.
+
+This are not just academicly speeking. I have had to maintain very complex OO 
+based codes in the past. Promoting FP style, is my way to make my job as a 
+developer a bit easier.
+
+---
+class: term
+![-resize-b](./banana.jpg)
+
+???
+
+Let me cite Joe Armstrong, the creator of the functional programming language,
+Erlang:
+"The problem with object-oriented languages is they’ve got all this implicit 
+environment that they carry around with them. You wanted a banana but what 
+you got was a gorilla holding the banana and the entire jungle."
+
+The citation is taken from the book Coders at Work.
+
+OK. So now that we set the right mood and are the with the indroduction, let's
+see how functional Python is.
+---
+
+class: term
+# How functional is Python?
+
+ * First Class Functions
+ * Built-ins such as `map, filter, lambda, all, any, zip, enumerate, sorted`
+ * Special Syntax for List and Dictionary comperhansions.
+ * functional tools in the standard libray modules: `itertools, functools, operator`
+ * Higher order functions, closures, decorators.
+ * Generators and lazy evaluation with `yield`. 
+
+???
+
+Wikipedia tells us that: 
+"Python supports multiple programming paradigms, 
+including object-oriented, imperative and functional programming or procedural 
+styles."
+
+But let's break it down:
+
+Python has First Class Functions, which means that functions are objects.
+Functions have attributes, they can be referenced and assigned to variables.
+
+Python has many builtin functions and standard library tool which encourage 
+functional programming style.
+
+It also has a special syntax for manipulating iterable object known as list and 
+dictionary comperhansions. 
+
+It can do lazy evaluation and has so called `generators`.
+
+Decorators are commonly used to wrap functions with other functions. This is 
+other which knows as `High Order Function`. This simply a function that takes 
+another function as it's argument.
+
+So, we've got a lot of ground to cover. Let's start!
+
+---
+class: term
+# Functional style functions
+
+A function which changes stuff out of scope ...
+```python
+a = 0
+def no_functional_increment():
+    """vicicous side effects"""
+    global a
+    a += 1
+```
+Adhere to change stuff localy:
+
+```python
+def functioal_increment(a):
+    """increment a inside and return the incremented value"""
+    return a + 1
+```
+
+---
+class: term
+## No to `for` loops:
+
+```python
+newlist = []
+for word in oldlist:
+    newlist.append(word.upper())
+```
+
+## Say yes to `map`:
+```python
+newlist = map(str.upper, oldlist)
+```
+## or use a list comperhansion
+```python
+newlist = [s.upper() for s in oldlist]
+
+```
+
+???
+
+Every time you want to write a for loop, stop! 
+Use map or a list comperhansion. As a side bonus, map in Python is faster, and
+a list comprehansion is even faster. 
+You can think of map as a for moved into C code. The only restriction is that
+the "loop body" of map must be a function call. Besides the syntactic benefit 
+of list comprehensions, they are often as fast or faster than equivalent use 
+of map.
+
+See https://wiki.python.org/moin/PythonSpeed/PerformanceTips
+---
+class: term
+# you can also apply any function
+```python 
+>>> map(lambda x: x**2, range(1,4))
+[1, 4, 9]
+```
+List comperhansion use a slightly different syntax
+```python
+>>> [x**2 for x in  range(1,4)]
+[1, 4, 9]
+```
+This of course too
+```python
+[some_function(x) for x in  range(1,4)]
+```
+???
+
+Map does not only work with object's methods. It takes any function, including
+lambda functions.
+List comperhansion except also expersions, not only functions. We'll see more
+of list comperhansions later.
+
+Maps and List comperhansions can be used on other objects than lists. These 
+are all itrable objects.
+---
+class: term
+# iterable
+> An object capable of returning its members one at a time. 
+Examples of iterables include all sequence types (such as list, str, and tuple) 
+and some non-sequence types like dict and file and objects of any classes you 
+define with an __iter__() or __getitem__() method. 
+Iterables can be used in a for loop and in many other places where a sequence 
+is needed (zip(), map(), ...). 
+
+???
+
+<small>This definition is taken from the Python glossary</small>
+
+---
+class: term
+
+# Using `filter`
+```python
+>>> def is_even(x):
+...     return (x % 2) == 0
+>>> list(filter(is_even, range(10)))
+[0, 2, 4, 6, 8]
+```
+We can write this a list comperhansion too:
+```python
+>>> list(x for x in range(10) if is_even(x))
+[0, 2, 4, 6, 8]
+```
+???
+
+---
+class: term
+# all and any
+```python
+>>> any([0,1,0])
+True
+>>> any([0,0,0])
+False
+>>> any([1,1,1])
+True
+>>> all([0,1,0])
+False
+>>> all([0,0,0])
+False
+>>> all([1,1,1])
+True
+```
+???
+The any(iter) and all(iter) built-ins look at the truth values of an iterable’s 
+contents. any() returns True if any element in the iterable is a true value, 
+and all() returns True if all of the elements are true values:--
+
+---
+class: term
+# sorted
+```python
+>>> import random
+>>> # Generate 8 random numbers between [0, 10000)
+>>> rand_list = random.sample(range(10000), 8)
+>>> rand_list  
+[769, 7953, 9828, 6431, 8442, 9878, 6213, 2207]
+>>> sorted(rand_list)  
+[769, 2207, 6213, 6431, 7953, 8442, 9828, 9878]
+>>> sorted(rand_list, reverse=True)  
+[9878, 9828, 8442, 7953, 6431, 6213, 2207, 769]
+```
+entries is a list containing  blog posts, each with a date attribute.
+
+```python
+def _sort_entries(entries, reversed=True):
+    """Sort all entries by date and reverse the list"""
+    return list(sorted(entries, key=operator.attrgetter('date'), reverse=reversed))
+```
+		
+???
+
+collects all the elements of the iterable into a list, sorts the list, and 
+returns the sorted result. The key and reverse arguments are passed through to the constructed list’s sort() method.
+---
+class: term
+# zip
+
+```python
+>>> zip(['a', 'b', 'c'], (1, 2, 3))
+[('a', 1), ('b', 2), ('c', 3)]
+
+>>> zip(['a', 'b'], (1, 2, 3))
+[('a', 1), ('b', 2)]
+```
+???
+zip(iterA, iterB, ...) takes one element from each iterable and returns them in a tuple.
+It doesn’t construct an in-memory list and exhaust all the input iterators before returning;
+instead tuples are constructed and returned only if they’re requested. 
+(The technical term for this behaviour is lazy evaluation.)
+
+This iterator is intended to be used with iterables that are all of the same length. 
+If the iterables are of different lengths, the resulting stream will be the 
+same length as the shortest iterable.
+
+---
+class: term
+# list comperhansions
+
+
+Instead of an embeded for loop:
+
+```python
+>>> colors = ['red', 'yellow', 'blue']
+>>> clothes = ['hat', 'shirt', 'pants']
+>>> colored_clothes = ['{0} {1}'.format(
+... color, garment) for color in colors for garment in clothes]
+>>> colored_clothes
+['red hat', 'red shirt', 'red pants', ... 'blue hat', 'blue shirt', 'blue pants']
+```
+
+The alternative would be:
+```python
+colored_clothes = []
+
+for color in color:
+	 for garment in clothes:
+	     colored_clothed.append(
+... '{0} {1}'.format(color, garment))
+```
+
+???
+
+as mentioned before, the prefered way to iterate over iterators, instead of for
+loop.
+
+---
+class: term
+# dictionary and set comperhansions:
+```python
+>>> {k:v for (k,v) in zip(['a', 'b', 'c'], (1, 2, 3))}
+{'a': 1, 'c': 3, 'b': 2}
+
+>>> def invert(d):
+...     return {v : k for k, v in d.iteritems()}
+...
+>>> d = {0 : 'A', 1 : 'B', 2 : 'C', 3 : 'D'}
+>>> print invert(d)
+{'A' : 0, 'B' : 1, 'C' : 2, 'D' : 3}
+```
+
+set comperhansions:
+
+```python
+>>> { x for x in range(10) + range(1,2,3) }
+set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+```
+???
+
+The little unknown relative of list comperhansions, originally proposed for Python 2.3.
+It was however only included in Python 2.7 and Python 3.0 and later versions.
+
+Set comperhansions have a very similar syntax!
+---
+class:term
+## The `functools` and `operator` modules 
+```python
+>>> import functools
+>>> functools.reduce(lambda x,y: x*y, [1,2,3,4])
+24
+```
+This can also be written as:
+```python
+>>>import operator
+>>> functools.reduce(operator.mul, [1,2,3,4])
+24
+```
+???
+
+So,we finaly finished the built-is part. And now we get say some sexy stuff like
+high order functions.
+
+A higher-order function takes one or more functions as input and returns a new function. 
+The most useful tool in this module is the functools.partial() function.
+
+The functools module in Python 2.5 contains the reduce function and some other
+higher-order functions.
+
+The operator module:
+It contains a set of functions corresponding to Python’s operators. 
+These functions are often useful in functional-style code because they save 
+you from writing trivial functions that perform a single operation.
+
+Some of the functions in this module are:
+
+    Math operations: add(), sub(), mul(), floordiv(), abs(), ...
+    Logical operations: not_(), truth().
+    Bitwise operations: and_(), or_(), invert().
+    Comparisons: eq(), ne(), lt(), le(), gt(), and ge().
+    Object identity: is_(), is_not().
+
+---
+class: term
+# Closures
+
+```python
+>>> def startAt(start):
+...     def incrementBy(inc):
+...             return start + inc
+...     return incrementBy
+... 
+>>> f = startAt(10)
+>>> g = startAt(100)
+>>> 
+>>> print f(1), g(2)
+11 102
+```
+???
+
+Using a nested function we can make a "template" for function, or function factories.
+A nested function has access to the environment in which it was defined. 
+This is called a closure.
+---
+class: term
+# Closures with Lexical scoping
+```python
+>>> def count_from(a):
+...     count = [a]
+...     def incrementer(step):
+...         count[0] += step
+...         return count[0]
+...     return incrementer
+... 
+>>> start_at_hundred = count_from(100)
+>>> start_at_hundred(2)
+102
+>>> start_at_hundred(3)
+105
+>>> start_at_five = count_from(5)
+>>> start_at_five(3)
+8
+```
+???
+The definition of a closure occurs during the execution of the outer function. 
+Hence, it is possible to return an inner function that remembers the state of 
+the outer function, even after the outer function has completed execution. 
+---
+class: term
+# Partial Functions
+```python
+ functools.partial(func, *args, **keywords)
+```
+A simple example:
+```python
+>>> import functools
+>>> def log(message, subsystem):
+...     """Write the contents of 'message' to the specified subsystem."""
+...     print('%s: %s' % (subsystem, message))
+... 
+>>> server_log = functools.partial(log, subsystem='server')
+>>> server_log('Unable to open socket')
+server: Unable to open socket
+``` 
+???
+Factory functions are also very common, and for more complex closure function, 
+we the partial constructor.
+The constructor for partial() takes the arguments 
+(function, arg1, arg2, ..., kwarg1=value1, kwarg2=value2). 
+The resulting object is callable, so you can just call it to invoke function with the filled-in arguments.
+
+---
+class: term
+# functools.partial examples:
+```python
+>>> def generic_filter(obj, klass, func, exception):
+...     """this function makes no real sense, yet ..."
+...     if isinstance(obj, klass):
+...         return func(obj)
+...     else:
+...         raise exception
+... 
+>>> safe_add_3 = partial(generic_filter, klass=int, func=lambda x: x+3, 
+                         exception=ValueError("You didn't give an int"))
+>>> safe_add_3(5)
+8
+>>> safe_add_3("three")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 6, in generic_filter
+ValueError: You didn't give an int
+```
+---
+class: term
+# functools.partial examples:
+
+```python
+>>> safe_replace_str = partial(generic_filter, klass=str, 
+    func=lambda obj: obj.replace("Foo", "bar"), 
+    exception=ValueError("You didn't give a str"))
+>>> safe_replace_str("Foobaz"), 
+'barbaz'
+>>> safe_replace_str({}) 
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 6, in generic_filter
+ValueError: You didn't give a str
+```
+
+---
+class: term
+# Decorators
+```python
+>>> def outer(func):
+...     def inner():            
+...         print("inside inner")
+...         ret = func()
+...         print("called func")
+...         return ret + 1
+...     return inner
+... 
+>>> def foo():
+...     return 1
+... 
+>>> decorated = outer(foo)
+>>> decorated()
+inside inner
+called func
+2
+```
+
+???
+
+Decorators are also high order functions. The pattern of wrapping a function with
+another function is so common that Python has a special syntax for it.
+A powerful and common, albeit slightly complex, paradigm in Python is the use 
+of function decorators. The usual role of decorators is to reduce repetition in 
+code by consolidating common elements of setup and teardown in functions.
+
+The second building block is a closure. Remember that a nested, or inner, 
+function in Python has access to the environment in which it was defined.
+If that environment happens to include another function, then the closure will 
+have access to that function.
+
+---
+class: term
+# decorator syntax:
+
+Instead of doing:
+```python
+>>> decorated = outer(foo)
+```
+We simply add on top of the function's signature:
+```python
+>>> @outer
+... def foo():
+...     return 1
+... 
+>>> foo()
+inside inner
+called func
+2
+>>> foo
+<function outer.<locals>.inner at 0x7f936b8e4268>
+```
+???
+Calling foo() won’t invoke the original foo, instead the decorated functions is
+invoked.
+---
+class: term
+# Generators
+## lazy evalutaion of list comperhansions
+```python
+>>> (x**2 for x in  range(1,4))
+<generator object <genexpr> at 0x7f7672c992b0>
+>>> next((x**2 for x in  range(1,4)))
+1
+>>> for item in (x**2 for x in  range(1,4)): print(item,)
+... 
+1
+4
+9
+```
+???
+Storing a new list as the output of a list comprehension is not always optimal 
+behavior. Particularly in a case where that list is intermediary or 
+where the total size of the contents is quite large.
+
+For such cases, a slightly modified syntax 
+(replacing square brackets with parentheses) leads to the creation of a 
+generator instead of a new list. 
+The generator will produce the individual items in the list as each one is 
+requested, which is generally while iterating over that new list.
+---
+class: term
+# Generator functions
+```python``
+>>> def generate_ints(N):
+...    for i in range(N):
+...        yield i
+
+>>> gen = generate_ints(3)
+>>> gen
+<generator object generate_ints at 0x7f7672c99308>
+>>> next(gen)
+0
+>>> next(gen)
+1
+...
+>>> next(gen)
+Traceback (most recent call last):
+  File "stdin", line 1, in ?
+  File "stdin", line 2, in generate_ints
+StopIteration
+```
+???
+	
+Generators are a special class of functions that simplify the task of
+writing iterators. Regular functions compute a value and return it, 
+but generators return an iterator that returns a stream of values.
+
+Any function containing a yield keyword is a generator function; 
+
+When you call a generator function, it doesn’t return a single value; 
+instead it returns a generator object that supports the iterator protocol. 
+On executing the yield expression, the generator outputs the value of i, 
+similar to a return statement. 
+The big difference between yield and a return statement is that on reaching a 
+yield the generator’s state of execution is suspended and local variables 
+are preserved. 
+On the next call to the generator’s __next__() method, 
+the function will resume executing.
+
+---
+class:term
+## Generators resume execution after `yield`:
+```python
+>>> def generate_ints(N):
+...     count = 1
+...     for i in range(N):
+...         count += 1
+...         yield i
+...         print("I gave you {}. {} more to go ...".format(i, N-count))
+... 
+>>> g = generate_ints(5)
+>>> next(g)
+0
+>>> next(g)
+I gave you 0. 3 more to go ...
+1
+>>> next(g)
+I gave you 1. 2 more to go ...
+2
+>>> next(g)
+I gave you 2. 1 more to go ...
+3
+>>> next(g)
+I gave you 3. 0 more to go ...
+4
+>>> next(g)
+I gave you 4. -1 more to go ...
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+```
+
+---
+class: term
+# putting all together
+
+## let's create a functional solutions
+???
+
+So, who here does not know the fizz buzz game?
+explain the game shortly. 
+
+</textarea>
+<!--script src="https://gnab.github.io/remark/downloads/remark-latest.min.js"-->
+<script src="./static/remark-latest.js" ></script>
+<script>
+	var slideshow = remark.create(
+	{
+		// Set the slideshow display ratio
+		// Default: '4:3'
+		// Alternatives: '16:9', ...
+		ratio: '4:3',
+
+		// Navigation options
+		navigation: {
+			// Enable or disable navigating using scroll
+			// Default: true
+			// Alternatives: false
+			scroll: true,
+
+			// Enable or disable navigation using touch
+			// Default: true
+			// Alternatives: false
+			touch: true,
+
+			// Enable or disable navigation using click
+			// Default: false
+			// Alternatives: true
+			// click: true
+		},
+
+			//slideNumberFormat: function (current, total) {
+			//return '';
+			//},
+
+			// Enable or disable counting of incremental slides in the slide counting
+			countIncrementalSlides: true
+		});
+</script>
+</body>
+</html>
