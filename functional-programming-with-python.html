@@ -165,24 +165,32 @@ class: term
 
 ???
 
-When people talk about functional programming, they mention a 
-dizzying number of “functional” characteristics. They mention immutable data, 
-first class functions and tail call optimisation. 
-These are language features that aid functional programming. 
-They mention mapping, reducing, pipelining, recursing, currying and the use of 
-higher order functions. 
-These are programming techniques used to write functional code. 
-They mention parallelization, lazy evaluation and determinism. 
-These are advantageous properties of functional programs.
-
-Ignore all that. Functional code is characterised by one thing: 
-the absence of side effects. 
+Essentially after all these bullet points, functional code is
+characterised by one thing: the absence of side effects. 
 It doesn’t rely on data outside the current function, 
 and it doesn’t change data that exists outside the current function. 
 Every other “functional” thing can be derived from this property.
 
 citation from:
 https://codewords.recurse.com/issues/one/an-introduction-to-functional-programming
+---
+class: term
+# Why should you care? Why do I care?
+
+## OOP vs. FP
+.img-left[
+![-clip-b](./OOP.jpg)
+]
+
+???
+
+Object Oriented Code can be very complex to master, and as such very hard to 
+maintain. Functional Programming forces us to avoid side effects and as a result
+allows us to gain control over program development, and eases maintenance.
+
+This are not just academicly speeking. I have had to maintain very complex OO 
+based codes in the past. Promoting FP style, is my way to make my job as a 
+developer a bit easier.
 ---
 class: term
 # Why should you care? Why do I care?
@@ -229,7 +237,7 @@ class: term
 
  * First Class Functions
  * Built-ins such as `map, filter, lambda, all, any, zip, enumerate, sorted`
- * Special Syntax for List and Dictionary comperhansions.
+ * Special Syntax for List and Dictionary comperhensions.
  * functional tools in the standard libray modules: `itertools, functools, operator`
  * Higher order functions, closures, decorators.
  * Generators and lazy evaluation with `yield`. 
@@ -294,7 +302,7 @@ for word in oldlist:
 ```python
 newlist = map(str.upper, oldlist)
 ```
-## or use a list comperhansion
+## or use a list comperhension
 ```python
 newlist = [s.upper() for s in oldlist]
 
@@ -303,8 +311,8 @@ newlist = [s.upper() for s in oldlist]
 ???
 
 Every time you want to write a for loop, stop! 
-Use map or a list comperhansion. As a side bonus, map in Python is faster, and
-a list comprehansion is even faster. 
+Use map or a list comperhension. As a side bonus, map in Python is faster, and
+a list comprehension is even faster. 
 You can think of map as a for moved into C code. The only restriction is that
 the "loop body" of map must be a function call. Besides the syntactic benefit 
 of list comprehensions, they are often as fast or faster than equivalent use 
@@ -318,7 +326,7 @@ class: term
 >>> map(lambda x: x**2, range(1,4))
 [1, 4, 9]
 ```
-List comperhansion use a slightly different syntax
+List comperhension use a slightly different syntax
 ```python
 >>> [x**2 for x in  range(1,4)]
 [1, 4, 9]
@@ -331,10 +339,10 @@ This of course too
 
 Map does not only work with object's methods. It takes any function, including
 lambda functions.
-List comperhansion except also expersions, not only functions. We'll see more
-of list comperhansions later.
+List comperhension except also expersions, not only functions. We'll see more
+of list comperhensions later.
 
-Maps and List comperhansions can be used on other objects than lists. These 
+Maps and List comperhensions can be used on other objects than lists. These 
 are all itrable objects.
 ---
 class: term
@@ -360,7 +368,7 @@ class: term
 >>> list(filter(is_even, range(10)))
 [0, 2, 4, 6, 8]
 ```
-We can write this a list comperhansion too:
+We can write this a list comperhension too:
 ```python
 >>> list(x for x in range(10) if is_even(x))
 [0, 2, 4, 6, 8]
@@ -438,7 +446,7 @@ same length as the shortest iterable.
 
 ---
 class: term
-# list comperhansions
+# list comperhensions
 
 
 Instead of an embeded for loop:
@@ -469,7 +477,7 @@ loop.
 
 ---
 class: term
-# dictionary and set comperhansions:
+# dictionary and set comperhensions:
 ```python
 >>> {k:v for (k,v) in zip(['a', 'b', 'c'], (1, 2, 3))}
 {'a': 1, 'c': 3, 'b': 2}
@@ -482,22 +490,25 @@ class: term
 {'A' : 0, 'B' : 1, 'C' : 2, 'D' : 3}
 ```
 
-set comperhansions:
+set comperhensions:
 
 ```python
->>> { x for x in range(10) + range(1,2,3) }
-set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+>>> list(range(10)) + [1,2,3]
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3]
+>>> { x for x in list(range(10)) + [1,2,3] }
+{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 ```
 ???
 
-The little unknown relative of list comperhansions, originally proposed for Python 2.3.
+The little unknown relative of list comperhensions, originally proposed for Python 2.3.
 It was however only included in Python 2.7 and Python 3.0 and later versions.
 
-Set comperhansions have a very similar syntax!
+Set comperhensions have a very similar syntax!
 ---
 class:term
 ## The `functools` and `operator` modules 
 ```python
+# implement factorial
 >>> import functools
 >>> functools.reduce(lambda x,y: x*y, [1,2,3,4])
 24
@@ -680,7 +691,7 @@ class: term
 
 Instead of doing:
 ```python
->>> decorated = outer(foo)
+>>> foo = outer(foo)
 ```
 We simply add on top of the function's signature:
 ```python
@@ -701,7 +712,7 @@ invoked.
 ---
 class: term
 # Generators
-## lazy evalutaion of list comperhansions
+## lazy evalutaion of list comperhensions
 ```python
 >>> (x**2 for x in  range(1,4))
 <generator object <genexpr> at 0x7f7672c992b0>
@@ -805,7 +816,174 @@ class: term
 
 So, who here does not know the fizz buzz game?
 explain the game shortly. 
+---
+class: term
+```python
+# Naive implementation ... with a for loop
 
+for i in range(1,21):
+    if not i % (5*3): 
+		    print("fizzbuzz")
+    elif not i % 5: 
+		    print("fizz")
+    elif not i % 3: 
+		    print("buzz")
+    else: 
+		    print(i)
+# 9 lines
+```
+---
+class: term
+## home brewed range
+```python
+>>> def range_(stop):
+...     '''home brewed range replacement'''
+...     n = 0
+...     while stop > n:
+...         yield n
+...         n += 1
+... 
+>>> [i for i in range_(5)]
+[0, 1, 2, 3, 4]
+```
+---
+class: term
+## closures to create fizz buzz filters
+```python
+>>> def fizzbuzzfilter(test,num, word):
+...     if (type(test) != int) or (test%num):
+...         return test
+...     else:
+...         return word
+...         
+... 
+>>> def fizzbuzzfilter3(test):
+...     return fizzbuzzfilter(test, 3, "fizz")
+... 
+>>> def fizzbuzzfilter5(test):
+...     return fizzbuzzfilter(test, 5, "buzz")
+... 
+>>> def fizzbuzzfilter15(test):
+...     return fizzbuzzfilter(test, 15, "fizzbuzz")
+... 
+>>> fizzbuzzfilter3(3), fizzbuzzfilter3(5), fizzbuzzfilter3(None)
+('fizz', 5, None)
+
+>>> list(map(fizzbuzzfilter5, map(fizzbuzzfilter3, map(fizzbuzzfilter15, range(1,21)))))
+[1, 2, 'fizz', 4, 'buzz', 'fizz', 7, 8, 'fizz', 'buzz', 11, 'fizz', 13, 14, 'fizzbuzz', 16, 17, 'fizz', 19, 'buzz']
+```
+???
+Multiple maps
+
+This approach works, but it does repeat in a way the DRY principle. It's not very readable. The STL offers a nice wrapper called partial, for creating exactly that.
+---
+class:term
+## using partial for fizzbuzz filters
+```python
+from functools import partial
+filter3 = partial(fizzbuzzfilter, num=3, word='fizz')
+filter5 = partial(fizzbuzzfilter, num=5, word='buzz')
+filter15 = partial(fizzbuzzfilter, num=15, word='fizzbuzz')
+print(list(map(filter5, map(filter3, map(filter15, range(1,21))))))
+```
+### OK, it works, and it's more conviniet to write, but it's still not very readable. 
+---
+class: term
+### map multiple functions
+### no DRY and slightly more readable
+```python
+def map_many(iterable, function, *other):
+    """map many functions to a single iterable"""
+    if other:
+        return map_many(map(function, iterable), *other)
+    return map(function, iterable)
+
+list(map_many(range(1,21), filter15, filter3, filter5))
+```
+### but this approach is a bit expensive. 
+```python
+%timeit list(map_many(range(1,21), filter15, filter3, filter5))
+10000 loops, best of 3: 26.3 µs per loop
+```
+---
+class: term
+## A slightly better approach with yield
+```python
+from functools import partial
+
+filter3 = partial(fizzbuzzfilter, num=3, word='fizz')
+filter5 = partial(fizzbuzzfilter, num=5, word='buzz')
+filter15 = partial(fizzbuzzfilter, num=15, word='fizzbuzz')
+
+def fizzbuzzfiltery(numbers, num, word):
+    for test in numbers:
+        if (type(test) == str) or (test%num):
+            yield test
+        else:
+            yield word
+            
+filter3y = partial(fizzbuzzfiltery, num=3, word='fizz')
+filter5y = partial(fizzbuzzfiltery, num=5, word='buzz')
+filter15y = partial(fizzbuzzfiltery, num=15, word='fizzbuzz')
+
+nums = range(1,21)
+
+list(filter5y(filter3y(filter15y(nums))))
+
+#%timeit list(filter5y(filter3y(filter15y(nums))))
+#100000 loops, best of 3: 12.2 µs per loop
+```
+---
+class: term
+## Not only ponies in functional programming
+
+ * Sometime FP is harder to read and write
+   
+```python
+  # replace query for Boolean fields
+  # get all field names
+  fields = {k: v.groups()[0] for k, v in
+            dict(filter(lambda x: x[1] is not None,
+                 map(lambda x: (x, re.search('(^\w+)__', x)),
+                     d.keys()))).items()}
+```
+![](./lisp_cycles.png)
+---
+class: term
+## Not only ponies in functional programming
+
+ * Functions calls are expensive in Python
+ * Python does not have good recursion (essential in classical FP languages)
+
+---
+class: term
+
+# Stuff to take home
+
+ * FP can make your code easier to follow
+ * Avoid side effects
+ * Not everything has to be in a class (although in Python everything is 
+ an object)
+ * Use high order functions, think of data flow, not of states. 
+
+---
+class: term
+## extra resources
+
+[An introduction to functional programming][1]  
+[Python Doc - FP how to][2]  
+[Advanced iterations - The new Circle][3]
+
+[1]: https://codewords.recurse.com/issues/one/an-introduction-to-functional-programming
+[2]: https://docs.python.org/dev/howto/functional.html
+[3]: https://newcircle.com/bookshelf/python_fundamentals_tutorial/advanced_iterations
+---
+class: term
+# Image credits
+
+ - Clean server cables - https://www.flickr.com/photos/kenfagerdotcom/
+ - Banana - https://www.flickr.com/photos/robin24/
+ - xkcd.com for the comic strip
 </textarea>
 <!--script src="https://gnab.github.io/remark/downloads/remark-latest.min.js"-->
 <script src="./static/remark-latest.js" ></script>
